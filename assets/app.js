@@ -169,13 +169,14 @@
       document.documentElement.classList.add('intro-on');
       frame.classList.remove('intro-done', 'show-logo');
       if (video) { video.pause(); video.currentTime = 0; }
-      const clip = h('video', { src: 'assets/intro/wall-opening.mp4', poster: 'assets/intro/wall-opening.webp',
+      const clip = h('video', { src: 'assets/intro/wall-opening.mp4?v=2', poster: 'assets/intro/wall-opening.webp?v=2',
         muted: true, playsinline: true, 'aria-hidden': 'true' });
       opening = clip;
       clip.muted = true;
       $('#openingLayer').append(clip);
       clip.onended = () => { if (opening === clip) reveal(280); };
       clip.onerror = () => { if (opening === clip) reveal(); };
+      clip.onplaying = () => { if (opening === clip) clearTimeout(loadTimer); };
       loadTimer = setTimeout(() => { if (opening === clip) reveal(); }, 6500);
       clip.play().catch(() => { if (opening === clip) reveal(); });
     };
