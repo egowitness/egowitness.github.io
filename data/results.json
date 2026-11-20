@@ -1,0 +1,388 @@
+{
+ "source": "Table 3 of arXiv 2611.25849",
+ "abilities": [
+  "Q01",
+  "Q02",
+  "Q03",
+  "Q04",
+  "Q05",
+  "Q06",
+  "Q07"
+ ],
+ "rows": [
+  {
+   "group": "baseline",
+   "name": "Uniform random, expected",
+   "logo": null,
+   "abilities": [
+    33.33,
+    25.0,
+    25.0,
+    25.0,
+    25.0,
+    33.33,
+    25.0
+   ],
+   "macro": 27.38,
+   "micro": 26.52,
+   "cross": 27.12
+  },
+  {
+   "group": "baseline",
+   "name": "Public-text ridge",
+   "logo": null,
+   "abilities": [
+    42.5,
+    28.33,
+    27.5,
+    27.5,
+    25.0,
+    43.33,
+    30.67
+   ],
+   "macro": 32.12,
+   "micro": 31.59,
+   "cross": 27.06
+  },
+  {
+   "group": "open",
+   "name": "Qwen3.8-27B",
+   "logo": "qwen-color",
+   "abilities": [
+    38.33,
+    50.0,
+    27.5,
+    57.5,
+    52.5,
+    62.5,
+    45.67
+   ],
+   "macro": 47.71,
+   "micro": 46.97,
+   "cross": 58.07
+  },
+  {
+   "group": "open",
+   "name": "VideoChat-Flash-7B",
+   "logo": "internlm-color",
+   "abilities": [
+    62.5,
+    26.67,
+    25.0,
+    32.5,
+    63.33,
+    30.83,
+    43.83
+   ],
+   "macro": 40.67,
+   "micro": 41.82,
+   "cross": 38.37
+  },
+  {
+   "group": "open",
+   "name": "MiMo-VL-7B-RL",
+   "logo": "xiaomi",
+   "abilities": [
+    35.0,
+    43.33,
+    17.5,
+    37.5,
+    47.5,
+    36.67,
+    46.0
+   ],
+   "macro": 37.64,
+   "micro": 40.68,
+   "cross": 46.25
+  },
+  {
+   "group": "open",
+   "name": "VideoLLaMA3-7B",
+   "logo": "alibaba-color",
+   "abilities": [
+    49.17,
+    45.83,
+    20.83,
+    38.33,
+    52.5,
+    48.33,
+    37.5
+   ],
+   "macro": 41.79,
+   "micro": 40.23,
+   "cross": 47.78
+  },
+  {
+   "group": "open",
+   "name": "InternVideo3-8B",
+   "logo": "internlm-color",
+   "abilities": [
+    37.5,
+    57.5,
+    23.33,
+    40.83,
+    49.17,
+    33.33,
+    39.33
+   ],
+   "macro": 40.14,
+   "micro": 39.85,
+   "cross": 44.09
+  },
+  {
+   "group": "open",
+   "name": "InternVL3.5-8B",
+   "logo": "internlm-color",
+   "abilities": [
+    43.33,
+    44.17,
+    22.5,
+    43.33,
+    59.17,
+    35.0,
+    37.83
+   ],
+   "macro": 40.76,
+   "micro": 39.7,
+   "cross": 47.9
+  },
+  {
+   "group": "open",
+   "name": "LongVILA-R1-7B",
+   "logo": "nvidia-color",
+   "abilities": [
+    47.5,
+    32.5,
+    15.0,
+    31.67,
+    31.67,
+    39.17,
+    24.17
+   ],
+   "macro": 31.67,
+   "micro": 28.94,
+   "cross": 28.46
+  },
+  {
+   "group": "open",
+   "name": "Gemma 4 12B",
+   "logo": "google-color",
+   "abilities": [
+    25.83,
+    50.0,
+    5.83,
+    29.17,
+    14.17,
+    36.67,
+    30.83
+   ],
+   "macro": 27.5,
+   "micro": 28.71,
+   "cross": 49.81
+  },
+  {
+   "group": "open",
+   "name": "Qwen3.5-4B",
+   "logo": "qwen-color",
+   "abilities": [
+    29.17,
+    35.83,
+    25.83,
+    30.83,
+    10.0,
+    34.17,
+    28.67
+   ],
+   "macro": 27.79,
+   "micro": 28.11,
+   "cross": 41.93
+  },
+  {
+   "group": "proprietary",
+   "name": "Gemini 4 Argon",
+   "logo": "gemini-color",
+   "abilities": [
+    74.17,
+    83.33,
+    34.17,
+    77.5,
+    85.83,
+    84.17,
+    74.0
+   ],
+   "macro": 73.31,
+   "micro": 73.56,
+   "cross": 86.28
+  },
+  {
+   "group": "proprietary",
+   "name": "Claude Opus 5.5",
+   "logo": "claude-color",
+   "abilities": [
+    70.0,
+    80.0,
+    29.17,
+    73.33,
+    91.67,
+    80.0,
+    69.17
+   ],
+   "macro": 70.48,
+   "micro": 70.0,
+   "cross": 80.81
+  },
+  {
+   "group": "proprietary",
+   "name": "GPT-6.1 Sol",
+   "logo": "openai",
+   "abilities": [
+    62.5,
+    77.5,
+    28.33,
+    61.67,
+    74.17,
+    65.0,
+    55.5
+   ],
+   "macro": 60.67,
+   "micro": 58.79,
+   "cross": 67.6
+  },
+  {
+   "group": "prompted",
+   "name": "Qwen3.5-4B (base)",
+   "logo": "qwen-color",
+   "abilities": [
+    43.33,
+    49.17,
+    3.33,
+    20.0,
+    18.33,
+    6.67,
+    23.83
+   ],
+   "macro": 23.52,
+   "micro": 23.64,
+   "cross": 22.24
+  },
+  {
+   "group": "prompted",
+   "name": "GPT-5.3 Chat",
+   "logo": "openai",
+   "abilities": [
+    69.17,
+    66.67,
+    27.5,
+    52.5,
+    62.5,
+    80.83,
+    72.83
+   ],
+   "macro": 61.71,
+   "micro": 65.76,
+   "cross": 67.85
+  },
+  {
+   "group": "prompted",
+   "name": "Gemini 4 Argon",
+   "logo": "gemini-color",
+   "abilities": [
+    63.33,
+    60.0,
+    7.5,
+    35.0,
+    54.17,
+    52.5,
+    47.0
+   ],
+   "macro": 45.64,
+   "micro": 46.14,
+   "cross": 71.54
+  },
+  {
+   "group": "prompted",
+   "name": "Gemini 3.5 Flash-Lite",
+   "logo": "gemini-color",
+   "abilities": [
+    37.5,
+    31.67,
+    16.67,
+    36.67,
+    68.33,
+    57.5,
+    33.0
+   ],
+   "macro": 40.19,
+   "micro": 37.58,
+   "cross": 52.6
+  },
+  {
+   "group": "prompted",
+   "name": "Claude Haiku 5.5",
+   "logo": "claude-color",
+   "abilities": [
+    40.83,
+    62.5,
+    5.0,
+    26.67,
+    34.17,
+    44.17,
+    28.17
+   ],
+   "macro": 34.5,
+   "micro": 32.2,
+   "cross": 49.56
+  },
+  {
+   "group": "egoclue",
+   "name": "EgoClue-SFT",
+   "logo": "egowitness-glasses",
+   "abilities": [
+    64.17,
+    61.67,
+    15.83,
+    32.5,
+    55.0,
+    80.0,
+    67.0
+   ],
+   "macro": 53.74,
+   "micro": 58.56,
+   "cross": 68.11
+  },
+  {
+   "group": "egoclue",
+   "name": "EgoClue-SFT+GRPO",
+   "logo": "egowitness-glasses",
+   "abilities": [
+    71.67,
+    68.33,
+    38.33,
+    53.33,
+    73.33,
+    87.5,
+    81.33
+   ],
+   "macro": 67.69,
+   "micro": 72.65,
+   "cross": 78.4
+  },
+  {
+   "group": "synthesis",
+   "name": "EgoClue + Sol",
+   "logo": "egowitness-glasses",
+   "abilities": [
+    72.5,
+    67.5,
+    44.17,
+    55.83,
+    77.5,
+    87.5,
+    83.67
+   ],
+   "macro": 69.81,
+   "micro": 74.85,
+   "cross": 80.56
+  }
+ ]
+}

@@ -1,4 +1,582 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>EgoWitness — Instance-Level Spatial Memory</title><meta name="description" content="EgoWitness benchmarks instance-level spatial memory and reasoning in egocentric video streams."><link rel="icon" href="assets/egowitness-glasses.png"><style>
-:root{color-scheme:light;--ink:#16283d;--muted:#53667a;--blue:#2265a7;--line:#dbe6f0}*{box-sizing:border-box}body{margin:0;font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#fff}a{color:var(--blue);text-underline-offset:4px}main{max-width:1080px;margin:auto;padding:48px 28px 64px}.brandbar{display:flex;align-items:center;justify-content:space-between;gap:24px}.lab-logo{width:210px;max-width:36%;height:auto}.brand{display:flex;align-items:center;gap:13px;color:var(--blue);font-weight:750;font-size:22px;letter-spacing:-.5px}.brand img{width:64px;height:auto}header{padding:30px 0 35px;border-bottom:1px solid var(--line)}h1{font-size:clamp(28px,3.5vw,42px);line-height:1.22;letter-spacing:-1.1px;max-width:1000px;margin:0 0 24px;font-weight:750}.authors{display:flex;flex-wrap:wrap;gap:3px 17px;font-size:17px}.authors span,.affiliations span{white-space:nowrap}sup{font-size:.66em;margin-left:2px}.affiliations{display:flex;flex-wrap:wrap;gap:3px 16px;font-size:14px;color:var(--muted);margin:16px 0 4px}.equal{font-size:14px;color:var(--muted);margin:4px 0 24px}.links{display:flex;gap:12px;flex-wrap:wrap}.button{border:1px solid var(--line);border-radius:8px;padding:9px 18px;text-decoration:none;font-size:15px;font-weight:650}.button.primary{background:var(--blue);border-color:var(--blue);color:#fff}.button:hover{filter:brightness(.94)}section{margin-top:34px}h2{font-size:23px;letter-spacing:-.4px;margin:0 0 12px}.abstract p{margin:0;max-width:960px}.release{background:#f0f7fe;border:1px solid #d7e8f9;border-radius:12px;padding:24px 28px}.release h2{color:var(--blue)}.release p{margin:4px 0}.note{color:var(--muted);font-size:15px}footer{margin-top:32px;color:var(--muted);font-size:14px}a:focus-visible{outline:3px solid #69a6e6;outline-offset:4px}@media(max-width:600px){main{padding:28px 20px 40px}header{padding:24px 0}h1{letter-spacing:-.7px}.authors{gap:4px 12px;font-size:16px}.affiliations{display:block}.affiliations span{display:block;white-space:normal}.release{padding:20px}.abstract{text-align:left}}
-</style></head><body><main><div class="brandbar"><div class="brand"><img src="assets/egowitness-glasses.png" alt="Blue smart glasses"><span>EgoWitness</span></div><img class="lab-logo" src="assets/icomai-lab.png" alt="iComAI Lab — Integrated Communications and AI Lab"></div><header><h1>EgoWitness: Benchmarking Instance-Level Spatial Memory and Reasoning in Egocentric Video Streams</h1><div class="authors"><span>Zhengru Fang<sup>1,*</sup></span><span>Zehao Liu<sup>2,*</sup></span><span>Mingyu Tsoi<sup>1</sup></span><span>Yaoyu Zhu<sup>3</sup></span><span>Junlong Li<sup>4</sup></span><span>Fengmao Lv<sup>5</sup></span><span>Sijie Cheng<sup>2,6</sup></span><span>Yuanliang Sun<sup>6</sup></span><span>Fang Yang<sup>2</sup></span><span>Jun Zhang<sup>1</sup></span></div><div class="affiliations"><span><sup>1</sup>The Hong Kong University of Science and Technology</span><span><sup>2</sup>Tsinghua University</span><span><sup>3</sup>Southeast University</span><span><sup>4</sup>The Hong Kong Polytechnic University</span><span><sup>5</sup>Southwest Jiaotong University</span><span><sup>6</sup>RayNeo</span></div><p class="equal">* Equal contribution.</p><nav class="links" aria-label="Project resources"><a class="button primary" href="assets/EgoWitness-preprint.pdf">Paper with appendix</a><a class="button" href="https://github.com/egowitness/EgoWitness">GitHub repository</a></nav></header><section class="abstract"><h2>Abstract</h2><p>Recalling where and when an object was last seen and who saw it requires recognizing it across days and people. Existing long-video benchmarks focus on events, object categories, or relative locations, leaving instance-level spatial memory largely untested in multimodal models. To address this gap, we present EgoWitness, a benchmark for instance-level spatial memory and reasoning in egocentric video. Its 8,453 human-verified questions span approximately 324 hours of week-long and short-horizon recordings and test seven abilities, from recognizing an object or room to recalling who saw it and reasoning about room visits. Over one million reviewed masks of 34 registered landmarks and 21 movable-object labels are linked through room timelines. Among twelve direct vision-language models (VLMs), open-weight models reach at most 46.97% accuracy, and none exceeds 35% on identifying who saw an object last. We therefore propose EgoClue, a spatial-memory agent that retrieves candidate intervals, verifies instance identity, and computes spatial and temporal relations with five tools. Two-stage training with supervised fine-tuning (SFT) and Group Relative Policy Optimization (GRPO) raises its 4B controller from 23.64% to 72.65% accuracy on 1,320 held-out questions. Evidence-trace synthesis matches the best direct VLM at 74.85% on week-long questions and achieves 80.56% in environments excluded from training.</p></section><section class="release"><h2>Code and data</h2><p><strong>Code, dataset, and annotations are coming soon.</strong></p><p class="note">Release updates and access instructions will be shared in the <a href="https://github.com/egowitness/EgoWitness">project repository</a>.</p></section><footer>EgoWitness · 2026</footer></main></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches||/intro=force/.test(location.search))document.documentElement.classList.add('intro-on')</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EgoWitness: Instance-Level Spatial Memory in Egocentric Video</title>
+<meta name="description" content="EgoWitness benchmarks instance-level spatial memory and reasoning in egocentric video streams, with over one million masks, room timelines, and the EgoClue spatial-memory agent.">
+<meta property="og:title" content="EgoWitness: Benchmarking Instance-Level Spatial Memory and Reasoning in Egocentric Video Streams">
+<meta property="og:description" content="8,453 human-verified questions, 1,034,075 masks of landmarks and movable objects, room timelines for six wearers over seven days, and the EgoClue agent.">
+<meta property="og:image" content="https://egowitness.github.io/assets/fig/overview.webp">
+<meta name="theme-color" content="#1E1C1B">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preload" as="image" href="media/clips/hero_mosaic_poster.jpg">
+<style>
+:root{
+  --ink:#302B2C;--ink2:#4A4342;--muted:#6B625E;--line:#E8E1DA;--soft:#FBF8F4;--paper:#FFFFFF;
+  --navy:#3F5F78;--blue:#557A95;--sky:#D9E3EC;--orange:#C96E4E;--ok:#3E8A50;--bad:#B8433A;
+  --hero:#1E1C1B;--hero2:#262321;--heroink:#E8E1DA;--heromuted:#A9A29C;
+  --t-memory:#3F5F78;--t-video:#709EAF;--t-image:#67785C;--t-topology:#78627D;--t-timeline:#B88A2E;--t-answer:#C96E4E;
+  --g-open:#9FB4C4;--g-proprietary:#3F5F78;--g-prompted:#9B7FA0;--g-egoclue:#C96E4E;
+  --radius:14px;--maxw:1120px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-size:17px;line-height:1.65}
+img,video{max-width:100%;display:block}
+a{color:var(--blue);text-underline-offset:3px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+:focus-visible{outline:3px solid #A9BFD0;outline-offset:3px;border-radius:6px}
+
+/* Top navigation */
+.nav{position:sticky;top:0;z-index:40;background:rgba(30,28,27,.9);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid rgba(169,162,156,.16)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.labs{display:flex;align-items:center;gap:12px;background:#fff;border-radius:10px;padding:6px 12px;flex:none;text-decoration:none}
+.labs img{height:26px;width:auto}
+.labs .sep{width:1px;height:22px;background:#D8CFC6}
+.labs .hk{display:flex;align-items:center;gap:6px;font-weight:800;color:#003366;font-size:15px;letter-spacing:.3px}
+.labs .hk img{height:28px}
+.title-icon{display:inline-block;height:.78em;width:auto;vertical-align:-.06em;margin-right:.22em}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a.navlink{display:block;padding:6px 11px;border-radius:999px;color:var(--heromuted);text-decoration:none;font-size:14.5px;white-space:nowrap}
+.nav a.navlink:hover,.nav a.navlink.active{color:#fff;background:rgba(169,162,156,.16)}
+
+/* Hero */
+.hero{background:radial-gradient(1200px 520px at 50% -10%,#3D4650 0%,rgba(61,70,80,0) 70%),var(--hero);color:var(--heroink);padding:54px 0 64px}
+.hero h1{font-size:clamp(28px,4.1vw,48px);line-height:1.14;letter-spacing:-1.2px;margin:0 auto 14px;max-width:980px;text-align:center;color:#fff;font-weight:780}
+.hero h1 .accent{background:linear-gradient(90deg,#A9BFD0,#9FB4C4 45%,#E8B48F);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tagline{text-align:center;color:#D8CFC6;font-size:clamp(16px,1.6vw,19px);max-width:760px;margin:0 auto 22px}
+.authors{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 16px;font-size:16.5px;color:#E8E1DA}
+.authors span{white-space:nowrap}
+sup{font-size:.66em;margin-left:1px;line-height:0}
+.affil{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 14px;font-size:13.5px;color:var(--heromuted);margin:10px auto 2px;max-width:900px}
+.affil span{white-space:nowrap}
+.equal{text-align:center;font-size:13px;color:var(--heromuted);margin:4px 0 22px}
+.buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;font-size:15px;font-weight:650;text-decoration:none;border:1px solid rgba(169,162,156,.35);color:#fff;background:rgba(255,255,255,.04)}
+.btn:hover{background:rgba(255,255,255,.1)}
+.btn.primary{background:var(--blue);border-color:var(--blue)}
+.btn.primary:hover{background:#4A6A83}
+.btn small{font-weight:500;color:var(--heromuted);font-size:12.5px}
+.btn svg{width:17px;height:17px;flex:none}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:980px;margin:34px auto 0}
+.stat{border:1px solid rgba(169,162,156,.18);border-radius:12px;padding:12px 14px;background:rgba(48,43,44,.45)}
+.stat b{display:block;color:#fff;font-size:22px;letter-spacing:-.4px;line-height:1.2}
+.stat span{font-size:13px;color:var(--heromuted);line-height:1.35;display:block;margin-top:3px}
+
+/* Hero intro: zoom out from a few large tiles, then reveal the logo through the wall */
+.zoomer{position:absolute;inset:0}
+.wall-opening{display:none;position:absolute;inset:0;pointer-events:none;background:#111e28 url('assets/intro/wall-opening.webp') center/cover}
+.intro-on .wall-frame:not(.intro-done) .wall-opening{display:block}
+.intro-cut,.intro-line{position:absolute;inset:0;width:100%;height:100%;opacity:1;pointer-events:none;transition:opacity .82s ease}
+.intro-line{mix-blend-mode:screen}
+.intro-on .wall-frame:not(.show-logo) :is(.intro-cut,.intro-line){opacity:0;transition:none}
+.intro-scan{position:absolute;top:0;bottom:0;left:-25%;width:18%;pointer-events:none;opacity:0;background:linear-gradient(105deg,transparent,rgba(169,217,252,.12),transparent);mix-blend-mode:screen}
+.intro-on .wall-frame.show-logo .intro-scan{animation:scan 1.2s ease-out .12s both}
+@keyframes scan{0%{left:-25%;opacity:1}100%{left:105%;opacity:0}}
+.intro-on .wall-frame:not(.intro-done) .wall-grid{visibility:hidden}
+.intro-on .wall-frame:not(.intro-done){cursor:pointer}
+
+/* Video wall */
+.wall{max-width:1120px;width:min(100%,max(630px,calc(200svh - 622px)));margin:22px auto 28px;position:relative}
+@media (min-width:760px) and (max-height:850px){.hero{padding-top:30px}}
+.wall-frame{position:relative;isolation:isolate;scroll-margin-top:64px;border-radius:16px;overflow:hidden;background:#17202a;box-shadow:0 30px 80px rgba(0,0,0,.45);aspect-ratio:2/1}
+.wall-frame video,.wall-frame img.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .3s}
+.wall-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr)}
+.wall-grid button{all:unset;cursor:pointer;position:relative;outline-offset:-3px}
+.wall-grid button::after{content:"";position:absolute;inset:3px;border-radius:6px;border:2px solid transparent;transition:border-color .15s,background .15s}
+.wall-grid button:hover::after,.wall-grid button:focus-visible::after{border-color:#9edbff;background:rgba(156,211,248,.10)}
+.wall-grid button .tip{position:absolute;left:8px;bottom:8px;right:8px;font-size:12.5px;line-height:1.3;color:#fff;background:rgba(24,22,21,.8);padding:5px 8px;border-radius:6px;opacity:0;transform:translateY(4px);transition:.15s;pointer-events:none}
+.wall-grid button:hover .tip,.wall-grid button:focus-visible .tip{opacity:1;transform:none}
+.wall-cap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13.5px;color:var(--heromuted);margin-top:12px}
+.wall-cap .legend{display:flex;gap:14px;flex-wrap:wrap}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.motion-toggle{all:unset;cursor:pointer;color:#C9D6E0;font-size:13.5px}
+.wall-controls{display:flex;gap:16px}
+.motion-toggle:hover,.motion-toggle:focus-visible{color:white;text-decoration:underline}
+
+/* At a glance */
+.glance{padding:56px 0 8px}
+.question-card{background:linear-gradient(135deg,#F0F4F8,#F4EFF5);border:1px solid #D9E3EC;border-radius:18px;padding:24px 30px;margin-bottom:18px}
+.qbig{font-size:clamp(20px,2.2vw,26px);font-weight:720;line-height:1.38;letter-spacing:-.4px;margin:0 0 10px;color:var(--ink)}
+.gap{margin:0;color:var(--ink2);font-size:16.5px}
+.contrib{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ccard{display:block;border-radius:16px;padding:20px 22px;border:1px solid;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
+.ccard:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(48,43,44,.08)}
+.ccard.c1{background:#F0F4F8;border-color:#C9D6E0}.ccard.c2{background:#F0F4EC;border-color:#DBE4D4}.ccard.c3{background:#FAEEE5;border-color:#F3D9C6}
+.ccard .cnum{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;font-weight:800;font-size:14px;color:#fff;margin-bottom:10px}
+.c1 .cnum{background:var(--navy)}.c2 .cnum{background:#67785C}.c3 .cnum{background:#9C624D}
+.ccard h3{margin:0 0 8px;font-size:18px;line-height:1.3}
+.ccard p{margin:0 0 10px;font-size:15px;color:var(--ink2);line-height:1.55}
+.ccard b{display:block;font-size:14.5px;line-height:1.5;color:var(--ink)}
+
+/* Sections */
+section{padding:72px 0}
+section.alt{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 6px}
+h2{font-size:clamp(25px,2.7vw,34px);letter-spacing:-.7px;line-height:1.2;margin:0 0 12px}
+h3{font-size:21px;letter-spacing:-.3px;margin:52px 0 12px}
+.lead{font-size:18px;color:var(--ink2);max-width:860px;margin:0 0 26px}
+.abstract{max-width:900px;margin:0 auto;font-size:17.5px;color:var(--ink2);text-align:justify;hyphens:auto}
+figure{margin:24px 0 0}
+figure img{width:100%;height:auto;border-radius:10px;background:#fff}
+.wrap>figure,.two>figure{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 16px 12px;margin-top:30px;box-shadow:0 1px 2px rgba(48,43,44,.04)}
+.wrap>figure>img,.two>figure>img{border:0!important}
+.wrap>figure>figcaption,.two>figure>figcaption{border-top:1px solid var(--line);padding-top:10px;margin-top:14px}
+figure.card img{border:1px solid var(--line)}
+figcaption{font-size:14.5px;color:var(--muted);margin-top:10px;line-height:1.55}
+figcaption b{color:var(--ink2)}
+.narrow{max-width:920px;margin-left:auto;margin-right:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+
+/* Timeline */
+.tl-box{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:18px 18px 14px}
+.tl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tl{display:grid;grid-template-columns:96px repeat(7,minmax(104px,1fr));gap:6px 6px;min-width:860px;align-items:center}
+.tl .dayh{font-size:12.5px;font-weight:700;color:var(--ink2);text-align:center;letter-spacing:.04em}
+.tl .who{font-size:13px;font-weight:650;color:var(--ink2);line-height:1.2}
+.tl .who small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.cell{position:relative;height:30px;border-radius:6px;background:#F3EEE8}
+.cell .span{position:absolute;top:9px;height:12px;border-radius:3px;background:#C9D6E0}
+.cell .mk{all:unset;position:absolute;top:3px;width:24px;height:24px;margin-left:-12px;cursor:pointer;border-radius:50%;display:grid;place-items:center}
+.cell .mk::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 2px #fff,0 1px 4px rgba(48,43,44,.35);transition:transform .15s}
+.cell .mk:hover::before,.cell .mk.on::before{transform:scale(1.35)}
+.cell .mk.on::before{background:var(--navy)}
+.tl-axis{display:grid;grid-template-columns:96px repeat(7,minmax(104px,1fr));gap:6px;min-width:860px;font-size:10.5px;color:var(--muted);margin-top:4px}
+.tl-axis div{display:flex;justify-content:space-between}
+.tl-note{font-size:13.5px;color:var(--muted);margin:10px 2px 0;display:flex;gap:16px;flex-wrap:wrap}
+.player{display:grid;grid-template-columns:minmax(0,480px) 1fr;gap:26px;margin-top:22px;align-items:start}
+.vbox{position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#302B2C}
+.vbox video,.vbox img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vbox .play{all:unset;position:absolute;inset:0;display:grid;place-items:center;cursor:pointer}
+.vbox .play span{width:68px;height:68px;border-radius:50%;background:rgba(48,43,44,.72);display:grid;place-items:center;box-shadow:0 0 0 2px rgba(255,255,255,.6)}
+.vbox .play svg{width:28px;height:28px;margin-left:4px}
+.info h4{margin:0 0 4px;font-size:21px;letter-spacing:-.3px}
+.info .meta{color:var(--muted);font-size:14.5px;margin-bottom:14px}
+.roomnow{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px;background:var(--soft)}
+.roomnow .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.roomnow .val{font-size:19px;font-weight:700;color:var(--navy);transition:color .2s}
+.roomstrip{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:4px 0 4px;background:#E8E1DA;position:relative}
+.roomstrip i{display:block;height:100%}
+.roomstrip .head{position:absolute;top:-3px;width:2px;height:16px;background:var(--ink);border-radius:1px;left:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;border-radius:999px;padding:3px 10px;background:#F0F4F8;color:var(--navy);border:1px solid #D9E3EC;white-space:nowrap}
+.chip.mv{background:#FAEEE5;color:#8A4F38;border-color:#F3D9C6}
+.small{font-size:13.5px;color:var(--muted)}
+
+/* Room tours */
+.tours{margin:0 0 30px}
+.tour-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.tour-frame{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#1E1C1B;box-shadow:0 18px 50px rgba(48,43,44,.22)}
+.tour-frame video,.tour-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.tour-frame .play{all:unset;position:absolute;inset:0;display:grid;place-items:center;cursor:pointer}
+.tour-frame .play span{width:76px;height:76px;border-radius:50%;background:rgba(48,43,44,.72);display:grid;place-items:center;box-shadow:0 0 0 2px rgba(255,255,255,.65)}
+.tour-frame .play svg{width:30px;height:30px;margin-left:4px}
+.tour-meta{font-size:13.5px;color:var(--muted);margin-top:8px}
+
+/* Zoomable S3 */
+.zoom{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.zoom img{width:100%;height:auto}
+.zgrid{position:absolute;inset:0;display:grid}
+.zgrid button{all:unset;cursor:zoom-in;position:relative}
+.zgrid button:hover,.zgrid button:focus-visible{background:rgba(85,122,149,.10);box-shadow:inset 0 0 0 2px rgba(85,122,149,.75)}
+
+/* Abilities */
+.groups{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}
+.grp{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:18px 20px}
+.grp h4{margin:0 0 10px;font-size:16px;color:var(--ink2)}
+.ab{display:grid;grid-template-columns:52px 1fr;gap:4px 12px;padding:9px 0;border-top:1px solid var(--line)}
+.ab:first-of-type{border-top:0}
+.ab code{font:700 13px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;color:#fff;background:var(--navy);border-radius:6px;text-align:center;height:24px}
+.ab.room code{background:#67785C}
+.ab b{display:block;font-size:15.5px}
+.ab span{font-size:14.5px;color:var(--muted);line-height:1.5}
+
+/* Tools */
+.tools{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:22px 0 0}
+.tool{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff}
+.tool .tchip{display:inline-block;color:#fff;font-weight:700;font-size:13px;border-radius:999px;padding:3px 11px;margin-bottom:8px}
+.tool p{margin:0;font-size:14px;color:var(--muted);line-height:1.5}
+
+/* Trace viewer */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:26px 0 16px}
+.tab{all:unset;cursor:pointer;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:14.5px;color:var(--ink2)}
+.tab b{font-weight:750;margin-right:6px;color:var(--navy)}
+.tab[aria-selected=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.tab[aria-selected=true] b{color:#C9D6E0}
+.trace{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:22px;align-items:start}
+.qcard{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:18px 18px 14px;position:sticky;top:72px}
+.qcard .qtype{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+.qcard .q{font-size:16.5px;font-weight:650;margin:6px 0 10px;line-height:1.45}
+.refs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.refs figure{margin:0;width:96px}
+.refs img{width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.refs figcaption{font-size:11.5px;margin-top:3px;text-align:center}
+.opts{list-style:none;padding:0;margin:0 0 12px}
+.opts li{display:flex;gap:10px;padding:6px 8px;border-radius:8px;font-size:14.5px;line-height:1.4}
+.opts li b{flex:none;width:22px;height:22px;border-radius:6px;background:#F3EEE8;display:grid;place-items:center;font-size:12.5px}
+.opts li.gold{background:#EEF5EE}
+.opts li.gold b{background:var(--ok);color:#fff}
+.answers{border-top:1px solid var(--line);padding-top:10px}
+.answers h5{margin:0 0 8px;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ans{display:grid;grid-template-columns:20px 1fr auto;gap:8px;align-items:center;font-size:14px;padding:3px 0}
+.ans img{width:18px;height:18px;object-fit:contain}
+.ans .pick{font-weight:750;font-size:13px;border-radius:6px;padding:1px 8px;min-width:58px;text-align:center}
+.pick.wrong{background:#F8ECEA;color:var(--bad);border:1px solid #E8C4BF}
+.pick.right{background:#EEF5EE;color:var(--ok);border:1px solid #CFE3D2}
+.ans.egoclue{font-weight:700}
+#traces{scroll-margin-top:75px}
+.compare summary,.chat-note summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--navy)}
+.compare[open] summary{margin-bottom:8px}
+.chat-panel{min-width:0;border:1px solid #cbd6dd;border-radius:14px;overflow:hidden;background:#f4f7f8}
+.chat-title,.trace-ctl{display:flex;align-items:center;gap:8px;padding:10px 14px}
+.chat-title{justify-content:space-between;background:#fff;border-bottom:1px solid #dce4e9}
+.chat-title strong,.chat-by{display:flex;align-items:center;gap:7px}
+.chat-title strong{color:#314e61;font-size:16px}
+.chat-count{color:#586774;font-size:13px;font-variant-numeric:tabular-nums}
+.chat-log{list-style:none;margin:0;padding:14px;display:flex;flex-direction:column;gap:11px;height:clamp(285px,47vh,460px);overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.chat-msg{flex:none;width:fit-content;max-width:92%;border:1px solid #d8e1e6;background:white;border-radius:3px 13px 13px;padding:10px 13px;overflow-wrap:anywhere}
+.chat-msg.call{align-self:flex-end;background:#e5eff6;border-color:#c9dbe7;border-radius:13px 3px 13px 13px}
+.chat-msg.final{align-self:flex-end;color:#244e3e;background:#e7f3ec;border-color:#afcdbc;border-radius:13px 3px 13px 13px}
+.chat-msg p{font-size:14px;line-height:1.52;margin:5px 0 0}
+.chat-by{font-weight:700;font-size:13px;color:var(--navy)}
+.chat-by span{font-weight:500;color:#596a74;font-size:12px}
+.trace-icon{display:inline-block;width:20px;height:20px;object-fit:contain;flex:none}
+.chat-msg.reply[data-tool=image] .chat-by{color:#536849}
+.chat-msg.reply[data-tool=topology] .chat-by{color:#704b77}
+.chat-msg.reply[data-tool=timeline] .chat-by{color:#805b19}
+.chat-msg.final .chat-by{color:#2d684e}
+.chat-frames{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chat-frames figure{margin:0;width:100px}
+.chat-frames img{display:block;border-radius:7px;width:100px;height:100px;object-fit:contain;background:#f1f3f3}
+.chat-frames figcaption{font-size:12px;color:var(--muted);line-height:1.3;margin:4px 0}
+.chat-note{margin-top:7px}
+.chat-note summary{font-size:12px}
+.trace-ctl{flex-wrap:wrap;border-top:1px solid #dce4e9;background:white}
+.trace-ctl .ctl:disabled{opacity:.5;cursor:default}
+@media(prefers-reduced-motion:no-preference){.chat-msg{animation:chat-appear .22s ease-out both}}
+@keyframes chat-appear{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.ctl{all:unset;cursor:pointer;font-size:14px;font-weight:650;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink2)}
+.ctl.primary{background:var(--orange);border-color:var(--orange);color:#fff}
+
+/* Results chart */
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:18px 0 12px}
+.filters .lab{font-size:13.5px;color:var(--muted);margin-right:4px}
+.seg{all:unset;cursor:pointer;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink2)}
+.seg[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chart-box{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:16px 16px 8px;position:relative}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13.5px;color:var(--ink2);margin:0 0 6px}
+.chart-legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chart-legend .ref{display:inline-block;width:16px;border-top:2px dashed #A9A29C;margin-right:6px;vertical-align:4px}
+#chart svg{width:100%;height:auto;overflow:visible}
+#chart text{font-family:inherit}
+.tooltip{position:absolute;pointer-events:none;background:#302B2C;color:#fff;font-size:13px;line-height:1.45;border-radius:8px;padding:8px 10px;box-shadow:0 8px 24px rgba(48,43,44,.25);opacity:0;transition:opacity .12s;z-index:5;max-width:260px}
+.tooltip b{font-weight:700}
+.tbl-wrap{overflow-x:auto;margin-top:12px}
+table.res{border-collapse:collapse;font-size:13.5px;min-width:760px;width:100%}
+table.res th,table.res td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.res th:first-child,table.res td:first-child{text-align:left}
+table.res tr.grp td{background:var(--soft);font-weight:700;color:var(--ink2);text-align:left}
+table.res tr.ours td{background:#FAEEE5}
+.callouts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.callout{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.callout b{display:block;font-size:24px;letter-spacing:-.4px;color:var(--ink)}
+.callout span{font-size:14px;color:var(--muted)}
+
+/* BibTeX, release, footer */
+.bib{position:relative}
+.bib pre{background:#302B2C;color:#E8E1DA;border-radius:12px;padding:18px 20px;overflow-x:auto;font-size:13.5px;line-height:1.55;margin:0}
+.bib button{position:absolute;top:10px;right:10px;font-size:13px;padding:5px 12px;border-radius:999px;border:1px solid rgba(169,162,156,.4);background:rgba(255,255,255,.06);color:#fff;cursor:pointer}
+.release{border:1px solid #C9D6E0;background:#F0F4F8;border-radius:var(--radius);padding:18px 22px;margin-top:26px}
+.release b{color:var(--navy)}
+footer{background:var(--hero);color:var(--heromuted);font-size:14px;padding:30px 0}
+.ack{margin-top:26px;border:1px solid var(--line);background:#fff;border-radius:var(--radius);padding:18px 22px}
+.ack h3{margin:0 0 8px;font-size:18px}
+.ack p{margin:0;color:var(--ink2);line-height:1.7}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(24,22,21,.8);display:none;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal .panel{background:#fff;border-radius:16px;max-width:980px;width:100%;max-height:calc(100vh - 40px);overflow:auto;padding:18px;position:relative}
+.modal .x{position:absolute;top:10px;right:12px;all:unset;cursor:pointer;font-size:26px;line-height:1;color:var(--muted);padding:6px 10px;border-radius:8px}
+.modal .x:hover{background:var(--soft)}
+.modal .panel.zoompanel{max-width:1200px;padding:12px}
+.zoompanel img{width:100%;height:auto;border-radius:8px}
+.znav{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:13.5px;color:var(--muted)}
+
+.placeholder{border:1px dashed #D8CFC6;border-radius:12px;padding:26px;text-align:center;color:var(--muted);font-size:15px;background:#fff}
+
+@media (max-width:900px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .player,.trace,.two,.groups{grid-template-columns:1fr}
+  .qcard{position:static}
+  .tools{grid-template-columns:repeat(2,1fr)}
+  .callouts{grid-template-columns:1fr}
+  .contrib{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  .hero{padding:36px 0 44px}
+  .hero .wall{width:100%;margin:18px auto 25px}
+  .hero .stats{width:100%}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat b{font-size:19px}
+  .affil{display:block;text-align:center}
+  .affil span{display:block;white-space:normal}
+  section{padding:52px 0}
+  .abstract{text-align:left}
+  .tools{grid-template-columns:1fr}
+  .wall-grid button .tip{display:none}
+  .nav .wrap{gap:10px}
+  .labs{gap:8px;padding:5px 8px}
+  .labs img{height:18px}
+  .labs .hk span{display:none}
+  .labs .hk img{height:22px}
+  .labs .sep{height:16px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a class="labs" href="#top" aria-label="HKUST, iComAI Lab and RayNeo"><span class="hk"><img src="assets/logos/hkust.webp" alt="" width="63" height="96"><span>HKUST</span></span><span class="sep" aria-hidden="true"></span><img src="assets/logos/icomai-lab.webp" alt="iComAI Lab" width="266" height="64"><span class="sep" aria-hidden="true"></span><img src="assets/logos/rayneo.webp" alt="RayNeo" width="235" height="52"></a>
+    <ul>
+      <li><a class="navlink" href="#abstract">Abstract</a></li>
+      <li><a class="navlink" href="#annotations">Annotations</a></li>
+      <li><a class="navlink" href="#benchmark">Benchmark</a></li>
+      <li><a class="navlink" href="#egoclue">EgoClue</a></li>
+      <li><a class="navlink" href="#results">Results</a></li>
+      <li><a class="navlink" href="#bibtex">BibTeX</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <h1><img class="title-icon" src="assets/logos/glasses-title.webp" alt="" width="181" height="96"><span class="accent">EgoWitness</span>: Benchmarking Instance&#8209;Level Spatial Memory and Reasoning in Egocentric Video Streams</h1>
+    <div class="wall">
+      <div class="wall-frame" id="wall">
+        <div class="zoomer" id="zoomer"><img class="poster" src="media/clips/hero_mosaic_poster.jpg" alt="Annotated egocentric clips with object masks and room labels" width="1920" height="960" fetchpriority="high"></div>
+        <div class="wall-opening" id="openingLayer" aria-hidden="true"></div>
+        <img class="intro-cut" src="assets/intro/cut.png?v=2" alt="" width="1600" height="800" aria-hidden="true">
+        <img class="intro-line" src="assets/intro/line.png?v=2" alt="" width="1600" height="800" aria-hidden="true">
+        <span class="intro-scan" aria-hidden="true"></span>
+        <div class="wall-grid" id="wallGrid" aria-label="Annotated clips"></div>
+      </div>
+      <div class="wall-cap">
+        <span>Landmark and movable-object masks across seven days. Select a tile to play its clip.</span>
+        <div class="wall-controls"><button class="motion-toggle" id="introReplay" type="button">Replay intro</button>
+        <button class="motion-toggle" id="motionToggle" type="button" aria-pressed="false">Pause animation</button></div>
+      </div>
+    </div>
+    <div class="authors">
+      <span>Zhengru Fang<sup>1,*</sup></span><span>Zehao Liu<sup>2,*</sup></span><span>Mingyu Tsoi<sup>1</sup></span><span>Yaoyu Zhu<sup>3</sup></span><span>Junlong Li<sup>4</sup></span><span>Fengmao Lv<sup>5</sup></span><span>Sijie Cheng<sup>2,6</sup></span><span>Yuanliang Sun<sup>6</sup></span><span>Fang Yang<sup>2</sup></span><span>Jun Zhang<sup>1</sup></span>
+    </div>
+    <div class="affil">
+      <span><sup>1</sup>The Hong Kong University of Science and Technology</span><span><sup>2</sup>Tsinghua University</span><span><sup>3</sup>Southeast University</span><span><sup>4</sup>The Hong Kong Polytechnic University</span><span><sup>5</sup>Southwest Jiaotong University</span><span><sup>6</sup>RayNeo</span>
+    </div>
+    <p class="equal"><sup>*</sup> Equal contribution</p>
+    <div class="buttons">
+      <a class="btn primary" href="https://arxiv.org/abs/2611.25849"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>Paper</a>
+      <a class="btn" href="https://arxiv.org/pdf/2611.25849"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>PDF</a>
+      <a class="btn" href="https://github.com/egowitness/EgoWitness"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.7 5.38-5.27 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>Code <small>coming soon</small></a>
+      <a class="btn" href="https://github.com/egowitness/EgoWitness"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/></svg>Data <small>coming soon</small></a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>8,453</b><span>human-verified questions</span></div>
+      <div class="stat"><b>~324 h</b><span>week-long and short-horizon video</span></div>
+      <div class="stat"><b>1,034,075</b><span>masks of 34 landmarks and 21 movable-object labels</span></div>
+      <div class="stat"><b>17,269</b><span>room intervals over 17 named rooms and zones</span></div>
+      <div class="stat"><b>7</b><span>abilities, from object identity to room visits</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="glance" class="glance">
+  <div class="wrap">
+    <div class="question-card">
+      <p class="kicker">Research question</p>
+      <p class="qbig">Can a model tell which physical object it saw, when and where it saw it, and who else saw it, across a week of video from several wearers?</p>
+      <p class="gap">Existing long-video benchmarks mainly test events, object categories, or relative locations. They rarely test whether today&rsquo;s object is the instance seen days earlier, or who saw it last.</p>
+    </div>
+    <div class="contrib">
+      <a class="ccard c1" href="#benchmark"><span class="cnum">1</span><h3>An instance-level spatial-memory benchmark</h3><p>8,453 human-verified questions over about 324 hours test seven abilities, from object identity to room visits.</p><b>Twelve direct VLMs struggle most when identifying who saw an object last.</b></a>
+      <a class="ccard c2" href="#annotations"><span class="cnum">2</span><h3>Room-guided, human-reviewed annotations</h3><p>1,034,075 masks of 34 registered landmark instances at 1 Hz and 21 movable-object labels at 5 Hz.</p><b>Linked through 17,269 room intervals and reviewed identities.</b></a>
+      <a class="ccard c3" href="#egoclue"><span class="cnum">3</span><h3>EgoClue, a spatial-memory agent</h3><p>Five tools retrieve candidate intervals, verify instance identity, and compute room paths and visit durations.</p><b>SFT and GRPO raise its 4B controller from 23.64% to 72.65%, and trace synthesis reaches 74.85%.</b></a>
+    </div>
+  </div>
+</section>
+
+<section id="abstract">
+  <div class="wrap">
+    <p class="kicker" style="text-align:center">Abstract</p>
+    <p class="abstract">Recalling where and when an object was last seen and who saw it requires recognizing it across days and people. Existing long-video benchmarks focus on events, object categories, or relative locations, leaving instance-level spatial memory largely untested in multimodal models. To address this gap, we present EgoWitness, a benchmark for instance-level spatial memory and reasoning in egocentric video. Its 8,453 human-verified questions span approximately 324 hours of week-long and short-horizon recordings and test seven abilities, from recognizing an object or room to recalling who saw it and reasoning about room visits. Over one million reviewed masks of 34 registered landmarks and 21 movable-object labels are linked through room timelines. Among twelve direct vision-language models (VLMs), open-weight models reach at most 46.97% accuracy, and none exceeds 35% on identifying who saw an object last. We therefore propose EgoClue, a spatial-memory agent that retrieves candidate intervals, verifies instance identity, and computes spatial and temporal relations with five tools. Two-stage training with supervised fine-tuning (SFT) and Group Relative Policy Optimization (GRPO) raises its 4B controller from 23.64% to 72.65% accuracy on 1,320 held-out questions. Evidence-trace synthesis matches the best direct VLM at 74.85% on week-long questions and achieves 80.56% in environments excluded from training.</p>
+    <figure>
+      <img src="assets/fig/overview.webp" alt="Overview figure: instance-reference comparison, historical observations with wearer, time and room context, and seven QA abilities" width="2000" height="903" loading="lazy" decoding="async">
+      <figcaption><b>Instance-level spatial memory across egocentric streams.</b> (A) Instance-reference comparison. (B) Historical observations with wearer, time, and room context. (C) Seven QA abilities in two groups: object identity and memory, and room identity and visit reasoning.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="annotations" class="alt">
+  <div class="wrap">
+    <p class="kicker">Annotations</p>
+    <h2>A week of six wearers, annotated room by room and object by object</h2>
+    <p class="lead">The week-long component builds on <a href="https://egolife-ai.github.io/">EgoLife</a>: six wearers share one house for seven days in 32,001 source videos. We add 17,269 room intervals over 17 named rooms and zones, covering all recorded wearer-hours, and 1,034,075 masks of 34 registered landmark instances and 21 movable-object labels.</p>
+    <h3 style="margin-top:8px">Room timelines: VLM proposals and human review</h3>
+    <p class="small" style="margin:0 0 14px;max-width:880px">A VLM first proposes the wearer&rsquo;s room from dense captions of the 17 shared spaces. Annotators then review and correct the proposed intervals in the Online Room Curator System, yielding 17,269 room intervals that cover all recorded wearer-hours. Each tour replays a stretch of the week at high speed against both timelines.</p>
+    <div class="tours" id="tours">
+      <div class="tour-tabs" id="tourTabs" role="tablist"></div>
+      <div class="tour-frame" id="tourFrame"></div>
+    </div>
+    <h3>Object masks across the week</h3>
+    <div class="tl-box">
+      <div class="tl-scroll"><div id="timeline" class="tl" aria-label="Recordings by wearer and day"></div><div class="tl-axis" id="tlAxis"></div></div>
+      <div class="tl-note"><span><i class="dot" style="background:#C9D6E0"></i>recorded footage, 09:00 to 24:00</span><span><i class="dot" style="background:var(--orange);border-radius:50%"></i>annotated clip, click to play</span></div>
+      <div class="player" id="tlPlayer"></div>
+    </div>
+    <p class="small" style="margin-top:12px">Clips show the 976&times;976 center crop used for detection, with landmark masks at 1 Hz, movable-object masks at 5 Hz, and the wearer&rsquo;s room from the room timeline.</p>
+
+    <h3>Layered annotation and review</h3>
+    <figure class="card">
+      <img src="assets/fig/pipeline.webp" alt="Annotation pipeline from room timelines and landmark locations to SAM 3.1 mask tracks, identity review, and evidence-linked questions" width="1600" height="433" loading="lazy" decoding="async">
+      <figcaption><b>From reviewed observations to evidence-linked questions.</b> (a) Room timelines and landmark locations supply spatial context. (b) SAM 3.1 tracks Gemini- and human-checked keyframes. (c) Annotators resolve instance identity using reference views and room context. (d) Accepted observations fix question facts before wording.</figcaption>
+    </figure>
+    <figure class="card narrow">
+      <img src="assets/fig/workspaces.webp" alt="Annotation workspaces: the Online Room Curator System and the instance association workspace" width="2000" height="1977" loading="lazy" decoding="async">
+      <figcaption><b>Annotation workspaces.</b> (A) The Online Room Curator System supports boundary editing, room-instance assignment, landmark registration, and visual verification. (B) Annotators compare landmark and movable-object instances, inspect logical conflicts, and correct associations before export. Room-boundary conflicts return to A for interval correction.</figcaption>
+    </figure>
+
+    <h3>Room observations across wearers and days</h3>
+    <div class="zoom narrow" id="zoom">
+      <img src="assets/fig/rooms_overview.webp" alt="Room observations for six wearers over seven days on a 09:00 to 24:00 clock, colored by 17 named rooms and zones" width="1400" height="1127" loading="lazy" decoding="async">
+      <div class="zgrid" id="zgrid" style="grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr)"></div>
+    </div>
+    <figcaption class="narrow">Each row is one wearer and each column one day, on a common 09:00 to 24:00 clock. Colors identify 17 named rooms and zones, and white gaps mark times without recordings. <b>Click any region to enlarge it.</b></figcaption>
+  </div>
+</section>
+
+<section id="benchmark">
+  <div class="wrap">
+    <p class="kicker">Benchmark</p>
+    <h2>Seven abilities in two groups</h2>
+    <p class="lead">Each question names an object or room, public references, and a wearer and time scope. Answers use observations within that scope and, for historical questions, before the query time.</p>
+    <div class="groups">
+      <div class="grp"><h4>Object identity and memory</h4>
+        <div class="ab"><code>Q01</code><div><b>Object identity</b><span>Compare reference images to tell the same instance, different instances of one category, and different categories.</span></div></div>
+        <div class="ab"><code>Q02</code><div><b>Witness presence</b><span>Which of two wearers saw the target in a shared 6-s window.</span></div></div>
+        <div class="ab"><code>Q03</code><div><b>Latest witness</b><span>Who saw the target last before the query time.</span></div></div>
+        <div class="ab"><code>Q04</code><div><b>Object history</b><span>Which time windows contain the target.</span></div></div>
+      </div>
+      <div class="grp"><h4>Room identity and visit reasoning</h4>
+        <div class="ab room"><code>Q05</code><div><b>Spatial path</b><span>Find a shortest path between rooms identified from images.</span></div></div>
+        <div class="ab room"><code>Q06</code><div><b>Room identity</b><span>Apply the Q01 distinctions to room references, using room type as the category.</span></div></div>
+        <div class="ab room"><code>Q07</code><div><b>Visit reasoning</b><span>Order visits, time the current or a completed stay, count visits, and recall the preceding room.</span></div></div>
+      </div>
+    </div>
+    <figure class="card">
+      <img src="assets/fig/statistics.webp" alt="Room references, object annotations, and question coverage" width="1600" height="378" loading="lazy" decoding="async">
+      <figcaption><b>Room references, object annotations, and question coverage.</b> (a) The external room catalog spans 81 scopes and 18 room types, separate from the 17 named zones in the shared home. (b) The week-long component contains 34 registered landmark instances and 21 movable-object labels. (c) Questions cover both components, and Q07 is split into five subtypes.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="egoclue" class="alt">
+  <div class="wrap">
+    <p class="kicker">EgoClue</p>
+    <h2>Finding, verifying, and linking evidence with five tools</h2>
+    <p class="lead">EgoClue's 4B controller decides where to look and how to combine observations. It trains in two stages: supervised fine-tuning on teacher trajectories, then GRPO with answer and evidence rewards on its own rollouts.</p>
+    <div class="two">
+      <figure class="card" style="margin-top:0">
+        <img src="assets/fig/egoclue.webp" alt="EgoClue agent: the trained 4B controller selects tools and video intervals and refines its search from returned observations" width="2000" height="1964" loading="lazy" decoding="async">
+        <figcaption><b>EgoClue.</b> The trained 4B controller selects tools and video intervals, then refines its search from returned observations. The optional EgoClue + Sol stage synthesizes an answer from the trace without new visual calls.</figcaption>
+      </figure>
+      <div>
+        <div class="tools" style="grid-template-columns:1fr;margin-top:0">
+          <div class="tool"><span class="tchip" style="background:var(--t-memory)">Memory</span><p>Retrieves candidate intervals from text summaries of captions, transcripts, and coarse categories.</p></div>
+          <div class="tool"><span class="tchip" style="background:var(--t-video)">Video</span><p>Inspects intervals for targets, rooms, and events, starting at 1 FPS with local refinement.</p></div>
+          <div class="tool"><span class="tchip" style="background:var(--t-image)">Image</span><p>Compares public references with individual frames.</p></div>
+          <div class="tool"><span class="tchip" style="background:var(--t-topology)">Topology</span><p>Computes shortest paths between identified rooms.</p></div>
+          <div class="tool"><span class="tchip" style="background:var(--t-timeline)">Timeline</span><p>Computes durations from observed boundaries.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 id="traces">Worked examples: direct answers versus EgoClue&rsquo;s search</h3>
+    <p class="small" style="margin:0">Direct VLMs answer from up to 32 sampled frames. Replay EgoClue’s recorded tool calls and their summarized observations for the same question.</p>
+    <div class="tabs" role="tablist" id="traceTabs"></div>
+    <div id="traceView"></div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <p class="kicker">Results</p>
+    <h2>Open-weight VLMs trail, and EgoClue matches the best direct VLM</h2>
+    <div class="callouts">
+      <div class="callout"><b>46.97%</b><span>best open-weight direct VLM on 1,320 week-long questions</span></div>
+      <div class="callout"><b>23.64% &rarr; 72.65%</b><span>EgoClue's 4B controller from prompting to SFT+GRPO</span></div>
+      <div class="callout"><b>74.85% / 80.56%</b><span>EgoClue + Sol on week-long and cross-environment questions</span></div>
+    </div>
+    <div class="filters" role="group" aria-label="Metric">
+      <span class="lab">Metric</span>
+      <button class="seg" data-metric="micro" aria-pressed="true">Week-long Micro</button>
+      <button class="seg" data-metric="cross" aria-pressed="false">Cross-env. Micro</button>
+      <button class="seg" data-metric="0" aria-pressed="false">Q01</button><button class="seg" data-metric="1" aria-pressed="false">Q02</button><button class="seg" data-metric="2" aria-pressed="false">Q03</button><button class="seg" data-metric="3" aria-pressed="false">Q04</button><button class="seg" data-metric="4" aria-pressed="false">Q05</button><button class="seg" data-metric="5" aria-pressed="false">Q06</button><button class="seg" data-metric="6" aria-pressed="false">Q07</button>
+      <button class="seg" id="tableToggle" aria-pressed="false" style="margin-left:auto">Table view</button>
+    </div>
+    <div class="chart-box">
+      <div class="chart-legend" id="chartLegend"></div>
+      <div id="chart" role="img" aria-label="Accuracy by system"></div>
+      <div class="tooltip" id="tip"></div>
+      <div class="tbl-wrap" id="tableWrap" hidden></div>
+    </div>
+    <p class="small" style="margin-top:10px">Accuracy in percent from Table 3 of the paper: 1,320 week-long and 787 cross-environment questions. Direct VLMs use public references and up to 32 frames, and all agents share the same execution budget.</p>
+    <figure class="card">
+      <img src="assets/fig/training.webp" alt="EgoClue training dynamics: reward, policy entropy, response tokens, and dialogue turns" width="2000" height="437" loading="lazy" decoding="async">
+      <figcaption><b>EgoClue training dynamics.</b> Thin traces show raw scalars and thick traces show an EMA with coefficient 0.2.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="bibtex" class="alt">
+  <div class="wrap">
+    <p class="kicker">Citation</p>
+    <h2>BibTeX</h2>
+    <div class="bib"><button type="button" id="copyBib">Copy</button><pre id="bibText">@misc{fang2026egowitness,
+  title={EgoWitness: Benchmarking Instance-Level Spatial Memory and Reasoning in Egocentric Video Streams},
+  author={Zhengru Fang and Zehao Liu and Mingyu Tsoi and Yaoyu Zhu and Junlong Li and Fengmao Lv and Sijie Cheng and Yuanliang Sun and Fang Yang and Jun Zhang},
+  year={2026},
+  eprint={2611.25849},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2611.25849}
+}</pre></div>
+    <div class="ack" id="acknowledgments">
+      <h3>Acknowledgments</h3>
+      <p>Anyone who has gone back through a video to check which person saw which object will appreciate the patience this work took. Zhengru Fang led the project. We owe a special thank you to Grace Zhang, Yaoyu Zhu, Jialiang Lu, and the engineers at RayNeo who put that patience into annotating and correcting the data by hand. RayNeo also shared its expertise and provided the AI glasses and API credits we used. Zehao Liu, Mingyu Tsoi, and Junlong Li helped write the questions, check the answers, and train the agent. We’re grateful to Prof. Jun Zhang and Yuanliang Sun for guiding us throughout the project, and to Sijie Cheng, Prof. Fengmao Lv, and Prof. Fang Yang for reading our work so carefully and supporting us along the way.</p>
+    </div>
+    <div class="release"><b>Code, dataset, and annotations are coming soon.</b> Release updates and access instructions will be shared in the <a href="https://github.com/egowitness/EgoWitness">project repository</a>.</div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><span>EgoWitness, 2026. Week-long recordings build on <a href="https://egolife-ai.github.io/" style="color:#C9D6E0">EgoLife</a>.</span></div>
+    <a class="labs" href="#top" aria-label="HKUST, iComAI Lab and RayNeo"><span class="hk"><img src="assets/logos/hkust.webp" alt="" width="63" height="96" loading="lazy"><span>HKUST</span></span><span class="sep" aria-hidden="true"></span><img src="assets/logos/icomai-lab.webp" alt="iComAI Lab" width="266" height="64" loading="lazy"><span class="sep" aria-hidden="true"></span><img src="assets/logos/rayneo.webp" alt="RayNeo" width="235" height="52" loading="lazy"></a>
+  </div>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Clip player"><div class="panel" id="modalPanel"><button class="x" type="button" aria-label="Close" data-close>&times;</button><div id="modalBody"></div></div></div>
+
+<script src="assets/app.js?v=18" defer></script>
+</body>
+</html>

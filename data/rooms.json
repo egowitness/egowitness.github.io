@@ -1,0 +1,35 @@
+[
+ {
+  "id": "roomtour_day1_a4_200300",
+  "wearer": "A4_LUCIA",
+  "day": "DAY1",
+  "start": "20:03:30",
+  "end": "20:09:30",
+  "speed": 10,
+  "duration": 36.0,
+  "title": "A4 Lucia, DAY1: Living room GF, Kitchen GF, Corridor GF, Corridor 1F and Living room 1F",
+  "transitions": 14
+ },
+ {
+  "id": "roomtour_day3_a1_115500",
+  "wearer": "A1_JAKE",
+  "day": "DAY3",
+  "start": "11:55:30",
+  "end": "12:00:30",
+  "speed": 10,
+  "duration": 29.9,
+  "title": "A1 Jake, DAY3: Living room 1F, Corridor 1F, Corridor GF, Living room GF and Kitchen 1F",
+  "transitions": 8
+ },
+ {
+  "id": "roomtour_day2_a2_110600",
+  "wearer": "A2_ALICE",
+  "day": "DAY2",
+  "start": "11:12:00",
+  "end": "11:18:00",
+  "speed": 10,
+  "duration": 36.0,
+  "title": "A2 Alice, DAY2: Kitchen GF and Living room GF",
+  "transitions": 12
+ }
+]
