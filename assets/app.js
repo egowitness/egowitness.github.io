@@ -448,13 +448,13 @@
       const rows = d.rows.filter(r => r.group !== 'baseline');
       const base = Object.fromEntries(d.rows.filter(r => r.group === 'baseline').map(r => [r.name, r]));
       const chart = $('#chart'), tip = $('#tip'), legend = $('#chartLegend'), tableWrap = $('#tableWrap');
-      legend.innerHTML = ['open', 'proprietary', 'prompted', 'egoclue'].map(g => `<span><i class="sw" style="background:${GROUPS[g][2]}"></i>${GROUPS[g][0]}</span>`).join('') + '<span><i class="ref"></i>Uniform random and public-text ridge baselines</span>';
+      legend.innerHTML = ['open', 'proprietary', 'prompted', 'egoclue'].map(g => `<span><i class="sw" style="background:${GROUPS[g][2]}"></i>${GROUPS[g][0]}</span>`).join('') + '<span><i class="ref ref-u"></i>Uniform random</span><span><i class="ref ref-r"></i>Public-text ridge</span>';
       let metric = 'micro';
       const val = (r, m) => (m === 'micro' ? r.micro : m === 'cross' ? r.cross : r.abilities[+m]);
       const label = m => (m === 'micro' ? 'Week-long Micro' : m === 'cross' ? 'Cross-environment Micro' : d.abilities[+m]);
       function draw() {
         const W = Math.max(320, chart.clientWidth), narrow = W < 560;
-        const nameW = narrow ? 128 : 190, rowH = 22, gapG = 16, padT = 22, padR = 46;
+        const nameW = narrow ? 128 : 190, rowH = 22, gapG = 16, padT = 36, padR = 46;
         const order = ['open', 'proprietary', 'prompted', 'egoclue', 'synthesis'];
         let y = padT; const items = [];
         order.forEach((g, gi) => {
@@ -467,7 +467,14 @@
         for (let v = 0; v <= 100; v += 20) s += `<line x1="${sx(v)}" x2="${sx(v)}" y1="${padT - 6}" y2="${H - 22}" stroke="#E8E1DA" stroke-width="1"/><text x="${sx(v)}" y="${H - 6}" font-size="11.5" fill="#6B625E" text-anchor="middle">${v}</text>`;
         const refU = val(base['Uniform random, expected'] || { micro: null, cross: null, abilities: [] }, metric);
         const refR = val(base['Public-text ridge'] || { micro: null, cross: null, abilities: [] }, metric);
-        [refU, refR].forEach(v => { if (v != null) s += `<line x1="${sx(v)}" x2="${sx(v)}" y1="${padT - 8}" y2="${H - 22}" stroke="#A9A29C" stroke-width="1.5" stroke-dasharray="4 3"/>`; });
+        // Two baselines, drawn and labelled separately. The lower one is labelled on its left, the higher on its right.
+        const refs = [{ v: refU, name: 'Random', color: '#A9A29C', dash: '2 3' }, { v: refR, name: 'Text ridge', color: '#6B625E', dash: '6 3' }].filter(r => r.v != null);
+        const lo = refs.length === 2 && refs[1].v < refs[0].v ? 1 : 0;
+        refs.forEach((r, i) => {
+          const x = sx(r.v), left = refs.length === 2 ? i === lo : false;
+          s += `<line x1="${x}" x2="${x}" y1="${padT - 6}" y2="${H - 22}" stroke="${r.color}" stroke-width="1.5" stroke-dasharray="${r.dash}"/>`;
+          s += `<text x="${left ? x - 4 : x + 4}" y="${padT - 10}" font-size="11" fill="${r.color}" text-anchor="${left ? 'end' : 'start'}">${r.name} ${r.v.toFixed(2)}</text>`;
+        });
         items.forEach(({ r, y }, i) => {
           const v = val(r, metric), g = GROUPS[r.group], ours = r.group === 'egoclue' || r.group === 'synthesis';
           const nm = narrow ? r.name.replace('EgoClue-', 'EgoClue ').replace(' (base)', ' base') : r.name;

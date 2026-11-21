@@ -290,7 +290,9 @@ figcaption b{color:var(--ink2)}
 .chart-box{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:16px 16px 8px;position:relative}
 .chart-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13.5px;color:var(--ink2);margin:0 0 6px}
 .chart-legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-.chart-legend .ref{display:inline-block;width:16px;border-top:2px dashed #A9A29C;margin-right:6px;vertical-align:4px}
+.chart-legend .ref{display:inline-block;width:18px;margin-right:6px;vertical-align:4px}
+.chart-legend .ref-u{border-top:2px dotted #A9A29C}
+.chart-legend .ref-r{border-top:2px dashed #6B625E}
 #chart svg{width:100%;height:auto;overflow:visible}
 #chart text{font-family:inherit}
 .tooltip{position:absolute;pointer-events:none;background:#302B2C;color:#fff;font-size:13px;line-height:1.45;border-radius:8px;padding:8px 10px;box-shadow:0 8px 24px rgba(48,43,44,.25);opacity:0;transition:opacity .12s;z-index:5;max-width:260px}
@@ -670,7 +672,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
     </div>
     <div class="ack" id="acknowledgments">
       <h3>Acknowledgments</h3>
-      <p>We thank RayNeo for two weeks of data annotation, expert support, AI glasses devices, and API credits. We are especially grateful to Grace Zhang, Yaoyu Zhu, Jialiang Lu, and the RayNeo engineers who manually annotated and corrected the data. We also thank the EgoLife team for releasing the week-long recordings our annotations build on, and the authors of Ego4D, EgoTracks, EgoMask, RefEgo, EgoEnv, and ego_plan for the short-horizon videos and annotations.</p>
+      <p>We thank RayNeo for data annotation, expert support, AI glasses devices, and other essential resources. We are especially grateful to Grace Zhang, Yaoyu Zhu, Jialiang Lu, and the RayNeo engineers who manually annotated and corrected the data. We also thank the EgoLife team for releasing the week-long recordings our annotations build on, and the authors of Ego4D, EgoTracks, EgoMask, RefEgo, EgoEnv, and ego_plan for the short-horizon videos and annotations.</p>
     </div>
     <div class="release"><b>Code, dataset, and annotations are coming soon.</b> Release updates and access instructions will be shared in the <a href="https://github.com/egowitness/EgoWitness">project repository</a>.</div>
   </div>
@@ -686,6 +688,6 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:2
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Clip player"><div class="panel" id="modalPanel"><button class="x" type="button" aria-label="Close" data-close>&times;</button><div id="modalBody"></div></div></div>
 
-<script src="assets/app.js?v=17" defer></script>
+<script src="assets/app.js?v=18" defer></script>
 </body>
 </html>
