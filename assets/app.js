@@ -146,6 +146,11 @@
       return video;
     };
     let opening = null, revealTimer, loadTimer, autoIntroObserver;
+    // Start downloading the opening clip right away, in parallel with the clip list, so it is ready when the wall scrolls in.
+    const makeOpening = () => h('video', { src: 'assets/intro/wall-opening.mp4?v=3', poster: 'assets/intro/wall-opening.webp?v=2',
+      muted: true, playsinline: true, preload: 'auto', 'aria-hidden': 'true' });
+    let preOpening = (animateIntro && !paused) ? makeOpening() : null;
+    if (preOpening) { preOpening.muted = true; preOpening.load(); }
     let inView = !('IntersectionObserver' in window);
     const play = () => { const v = attach(); if (v) v.play().catch(() => {}); };
     const reveal = (delay = 0) => {
@@ -169,8 +174,8 @@
       document.documentElement.classList.add('intro-on');
       frame.classList.remove('intro-done', 'show-logo');
       if (video) { video.pause(); video.currentTime = 0; }
-      const clip = h('video', { src: 'assets/intro/wall-opening.mp4?v=2', poster: 'assets/intro/wall-opening.webp?v=2',
-        muted: true, playsinline: true, 'aria-hidden': 'true' });
+      const clip = preOpening || makeOpening();
+      preOpening = null;
       opening = clip;
       clip.muted = true;
       $('#openingLayer').append(clip);
